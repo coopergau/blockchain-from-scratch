@@ -1,7 +1,8 @@
-use sha2::{Sha256, Digest};
 use thiserror::Error;
+use chrono::Utc;
+use sha2::{Sha256, Digest};
 
-const MAX_TRANSACTIONS_PER_BLOCK: u8 = 100;
+const MAX_TRANSACTIONS_PER_BLOCK: u8 = 20;
 
 #[derive(Debug, Error)]
 pub enum BlockError {
@@ -19,6 +20,14 @@ pub struct Block {
 
 impl Block {
     // constructor like function that require blocks to have an index, timestamp, and previous hash
+    pub fn new(index: u64, previous_hash: [u8; 32], transactions: Vec<u8>) -> Block {
+        Block {
+            index: index,
+            timestamp: Utc::now().timestamp() as u64,
+            previous_hash: previous_hash,
+            transactions: transactions
+        }
+    }
 
     // Get the hash of a block
     pub fn hash(&self) -> Result<[u8; 32], BlockError> {
